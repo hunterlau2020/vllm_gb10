@@ -631,7 +631,7 @@ class FlashAttentionImpl(AttentionImpl):
             head_size > 256
             and self.vllm_flash_attn_version == 3
             and current_platform.is_cuda()
-            and current_platform.is_device_capability_family(90)
+            and (current_platform.is_device_capability_family(90) or current_platform.is_device_capability_family(100) or current_platform.is_device_capability_family(120))
         ):
             self.vllm_flash_attn_version = 4
         logger.info_once(
