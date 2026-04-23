@@ -401,10 +401,19 @@ def _fwd_grouped_kernel_stage1(
                 if v.dtype.is_fp8():
                     v = (v.to(tl.float32) * vs).to(q.dtype)
             else:
-                # MLA uses a single c_kv.
-                # loading the same c_kv to interpret it as v is not necessary.
-                # transpose the existing c_kv (aka k) for the dot product.
-                v = tl.trans(k)
+                # MLA uses a single c_kv (stored in K_Buffer).
+                # Since BLOCK_DMODEL might not equal BLOCK_DV, we load it again for v.
+                base_offs_v_mla = cur_kv_head * stride_buf_kh + offs_dv[:, None]
+                offs_buf_v_mla = kv_loc[None, :] * stride_buf_kbs + base_offs_v_mla
+                v_raw = tl.load(
+                    K_Buffer + offs_buf_v_mla,
+                    mask=(offs_n[None, :] < split_kv_end) & (mask_dv[:, None]),
+                    other=0.0,
+                    cache_modifier=".cg",
+                )
+                if v_raw.dtype.is_fp8():
+                    v_raw = (v_raw.to(tl.float32) * ks).to(q.dtype)
+                v = tl.trans(v_raw)
 
             n_e_max = tl.maximum(tl.max(qk, 1), e_max)
             re_scale = tl.exp(e_max - n_e_max)
