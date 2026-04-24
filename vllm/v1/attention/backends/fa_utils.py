@@ -196,7 +196,8 @@ def flash_attn_supports_mla():
 
             return is_fa_version_supported(
                 3
-            ) and current_platform.is_device_capability_family(90)
+            ) and (current_platform.is_device_capability_family(90)
+                   or current_platform.is_device_capability_family(120))
 
             # NOTE(Lucas): FA4 CuteDSL does NOT currently support MLA's non-standard
             # head dimensions (576 for qk, 512 for v) due to TMEM capacity limits.
