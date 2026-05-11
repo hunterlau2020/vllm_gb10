@@ -31,3 +31,48 @@ share/python-wheels/
 .installed.cfg
 *.egg
 MANIFEST
+
+# =============================================================================
+# Blackwell-specific additions
+# =============================================================================
+
+# Temporary test scripts
+test_*.py
+fix_*.py
+get_*.py
+patch_*.py
+out.txt
+*.pid
+
+# Documentation (mount separately if needed)
+docs/
+*.md
+!README.md
+
+# CI/CD
+.github/
+.buildkite/
+
+# Docker files (avoid cache invalidation)
+Dockerfile*
+docker-compose*
+
+# Large binaries
+*.tar
+*.tar.gz
+*.zip
+*.pt
+*.pth
+*.bin
+*.safetensors
+
+# Model files (mount as volumes)
+models/
+
+# FlashInfer cache (mount as volume)
+.cache/flashinfer/
+
+# Misc project files
+CLAUDE.md
+AGENTS.md
+progress.md
