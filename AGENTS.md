@@ -3,6 +3,24 @@
 > These instructions apply to **all** AI-assisted contributions to `vllm-project/vllm`.
 > Breaching these guidelines can result in automatic banning.
 
+## 工作流程约定
+
+### 修改代码前
+1. 先阅读相关文件，确认上下文和依赖关系
+ - 代码查询优先使用ctags和rg
+ - 检查以前沉淀的知识文档，了解代码结构
+2. 明确要解决的问题类型（Bug / Feature / Refactor）
+3. 如改动较大（涉及 >2 个文件或 >50 行），先给出方案概要，获得确认后再执行
+
+
+### 修改完成后
+1. **自行测试**: 
+2. **语法检查**: `
+3. **集成测试**: 运行1个小参数的大模型，并用curl访问，测试是否正常回答
+  - 运行过程中，要定期检查后台任务是否存在，有无崩溃或结束，避免空等；
+4. **重建设索引**: 执行 `ctags -R .` 更新代码索引
+5. 将查找代码中总结的经验沉淀到文档
+
 ## 1. Contribution Policy (Mandatory)
 
 ### Duplicate-work checks
